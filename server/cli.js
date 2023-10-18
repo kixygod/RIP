@@ -6,6 +6,17 @@ program
     .version('1.0.0')
     .description('Управление задачами на сервере');
 
+program
+    .command('help')
+    .description('Получить список команд')
+    .action(() => {
+        console.log("list - посмотреть все задачи");
+        console.log("create <name> - создать новую задачу");
+        console.log("delete <id> - удалить задачу по id");
+        console.log("toggle <id> - изменить состояние задачи");
+    });
+
+
 // Подкоманда для получения списка задач
 program
     .command('list')
