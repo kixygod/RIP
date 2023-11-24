@@ -9,14 +9,13 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        const newSocket = io('ws://localhost:8080'); // Подставьте ваш URL сервера
+        const newSocket = io('ws://localhost:8080');
 
         newSocket.on('connect', () => {
-            console.log('Connected to the server'); // Добавляем логирование для подтверждения подключения
+            console.log('Connected to the server');
         });
 
         newSocket.on('message', (message) => {
-            // message уже является объектом, так что нет необходимости в JSON.parse
             if (message.event === 'message') {
                 setMessages((prevMessages) => [...prevMessages, message.data]);
             }
@@ -25,24 +24,15 @@ const Chat = () => {
 
         setSocket(newSocket);
 
-        return () => newSocket.close(); // Закрываем соединение при размонтировании компонента
+        return () => newSocket.close();
     }, []);
 
     const sendMessage = (message) => {
         if (socket) {
             const messageObject = { event: 'message', data: { message, nickname } };
-            socket.emit('message', messageObject); // Убираем JSON.stringify
+            socket.emit('message', messageObject);
         }
     };
-
-
-    // Установка никнейма и отправка на сервер не реализована на сервере, 
-    // так что этот блок кода можно удалить или добавить соответствующую логику на сервер
-    // useEffect(() => {
-    //     if (socket && nickname) {
-    //         socket.emit('setNickname', nickname);
-    //     }
-    // }, [nickname, socket]);
 
     return (
         <div>

@@ -17,7 +17,6 @@ program
     });
 
 
-// Подкоманда для получения списка задач
 program
     .command('list')
     .description('Получить список задач')
@@ -34,7 +33,6 @@ program
             });
     });
 
-// Подкоманда для создания новой задачи
 program
     .command('create <name>')
     .description('Создать новую задачу')
@@ -52,7 +50,6 @@ program
             });
     });
 
-// Подкоманда для удаления задачи по ID
 program
     .command('delete <id>')
     .description('Удалить задачу по ID')
@@ -66,7 +63,6 @@ program
             });
     });
 
-// Подкоманда для изменения состояния задачи по ID
 program
     .command('toggle <id>')
     .description('Изменить состояние задачи (выполнено/не выполнено) по ID')
@@ -76,13 +72,12 @@ program
                 const currentStatus = response.data.completed;
                 const newStatus = !currentStatus;
 
-                const route = newStatus ? 'move-to-completed' : 'move-to-active'; // Выбираем маршрут в зависимости от состояния
+                const route = newStatus ? 'move-to-completed' : 'move-to-active';
 
                 axios.put(`http://localhost:3001/api/items/complete/${id}`, { completed: newStatus })
                     .then(() => {
                         console.log(`Задача с ID ${id} изменена на состояние: ${newStatus ? 'выполнено' : 'не выполнено'}`);
 
-                        // Используем выбранный маршрут для переноса задачи
                         axios.put(`http://localhost:3001/api/items/${route}/${id}`)
                             .then(() => {
                                 console.log(`Задача с ID ${id} перемещена: ${newStatus ? 'в активные' : 'в завершенные'}`);

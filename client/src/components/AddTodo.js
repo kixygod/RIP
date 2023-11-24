@@ -11,13 +11,13 @@ const AddTodo = ({ onAddTodo }) => {
         axios
             .post('http://localhost:3001/api/items/add', {
                 name: newTodo,
-                completed: false, // Можно указать начальное значение
+                completed: false,
             })
             .then(response => {
                 const data = response.data;
                 console.log('New todo added:', data);
-                setNewTodo(''); // Очистить поле ввода после добавления заметки
-                onAddTodo(data); // Вызвать функцию-колбэк для обновления списка заметок
+                setNewTodo('');
+                onAddTodo(data);
             })
             .catch(error => {
                 console.error('Error adding new todo:', error);
@@ -31,7 +31,7 @@ const AddTodo = ({ onAddTodo }) => {
                 placeholder="Введите новую заметку"
                 value={newTodo}
                 onChange={(e) => setNewTodo(e.target.value)}
-                style={{ marginRight: '20px', marginLeft: '10px', fontSize: '1.5rem' }} // Применить отступ справа
+                style={{ marginRight: '20px', marginLeft: '10px', fontSize: '1.5rem' }}
             />
             <button onClick={handleAddTodo} style={{ height: '2rem', width: '2rem' }}>
                 <FontAwesomeIcon icon={faPlus} />

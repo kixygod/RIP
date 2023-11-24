@@ -4,12 +4,10 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('todo.db');
 
-// Создайте таблицу для хранения задач, если ее еще нет
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN)");
 });
 
-// Маршрут для получения списка задач
 router.get('/get', (req, res) => {
     const query = "SELECT * FROM tasks";
     db.all(query, (err, rows) => {
@@ -17,11 +15,10 @@ router.get('/get', (req, res) => {
             console.error(err);
             res.status(500).json({ error: "Failed to fetch tasks" });
         } else {
-            // Сериализируйте каждую задачу перед отправкой клиенту
             const serializedTasks = rows.map(task => ({
                 id: task.id,
                 name: task.name,
-                completed: task.completed === 1 // Преобразовать 0/1 в true/false
+                completed: task.completed === 1
             }));
             res.json({ items: serializedTasks });
         }
@@ -29,7 +26,7 @@ router.get('/get', (req, res) => {
 });
 
 router.get('/get/:id', (req, res) => {
-    const taskId = req.params.id; // Получение ID задачи из параметра маршрута
+    const taskId = req.params.id;
 
     const query = "SELECT * FROM tasks WHERE id = ?";
     db.get(query, [taskId], (err, row) => {
@@ -38,11 +35,10 @@ router.get('/get/:id', (req, res) => {
             res.status(500).json({ error: "Failed to fetch the task" });
         } else {
             if (row) {
-                // Сериализуйте задачу перед отправкой клиенту
                 const serializedTask = {
                     id: row.id,
                     name: row.name,
-                    completed: row.completed === 1 // Преобразовать 0/1 в true/false
+                    completed: row.completed === 1
                 };
                 res.json(serializedTask);
             } else {
@@ -52,11 +48,9 @@ router.get('/get/:id', (req, res) => {
     });
 });
 
-// Маршрут для создания новой задачи
 router.post('/add', (req, res) => {
-    const { name, completed } = req.body; // Предполагается, что данные поступают в формате JSON
+    const { name, completed } = req.body;
 
-    // Десериализуйте данные перед выполнением запроса к базе данных
     const completedValue = completed ? 1 : 0;
 
     const query = "INSERT INTO tasks (name, completed) VALUES (?, ?)";
@@ -70,7 +64,6 @@ router.post('/add', (req, res) => {
     });
 });
 
-// Маршрут для удаления задачи
 router.delete('/del/:id', (req, res) => {
     const taskId = req.params.id;
 
@@ -89,7 +82,6 @@ router.delete('/del/:id', (req, res) => {
     });
 });
 
-// Маршрут для обновления статуса заметки
 router.put('/complete/:id', (req, res) => {
     const taskId = req.params.id;
 
@@ -108,7 +100,6 @@ router.put('/complete/:id', (req, res) => {
     });
 });
 
-// Маршрут для обновления статуса заметки
 router.put('/move-to-active/:id', (req, res) => {
     const taskId = req.params.id;
 
@@ -127,7 +118,6 @@ router.put('/move-to-active/:id', (req, res) => {
     });
 });
 
-// Маршрут для обновления статуса заметки
 router.put('/move-to-completed/:id', (req, res) => {
     const taskId = req.params.id;
 

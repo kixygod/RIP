@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const TodoList = () => {
-    const [todos, setTodos] = useState([]); // Список задач
+    const [todos, setTodos] = useState([]);
 
     useEffect(() => {
         fetchTodos();
@@ -23,7 +23,6 @@ const TodoList = () => {
         axios
             .delete(`http://localhost:3001/api/items/del/${id}`)
             .then(() => {
-                // Обновляем список задач, удаляя задачу с указанным id
                 setTodos(todos => todos.filter(todo => todo.id !== id));
             })
             .catch((error) => {
@@ -40,7 +39,7 @@ const TodoList = () => {
                     <FontAwesomeIcon
                         icon={faTrash}
                         style={{ cursor: 'pointer', border: '1px solid #ccc', padding: '4px' }}
-                        onClick={() => deleteTodo(todo.id)} // Вызываем функцию deleteTodo при клике на иконку
+                        onClick={() => deleteTodo(todo.id)}
                     />
                     <span style={{ marginLeft: '20px' }}>{todo.name}</span>
                 </div>

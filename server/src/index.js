@@ -8,10 +8,8 @@ const PORT = 3001;
 
 app.use(cors());
 
-// Разрешение разбора JSON-запросов
 app.use(express.json());
 
-// Маршруты
 app.get('/', (req, res) => {
     res.json({
         message: "Hello world"

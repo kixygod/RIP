@@ -91,7 +91,7 @@ const AddTodo = ({ onAddTodo }) => {
                 placeholder="Введите новую заметку"
                 value={newTodo}
                 onChange={(e) => setNewTodo(e.target.value)}
-                onKeyPress={handleKeyPress} // Добавляем обработчик события нажатия клавиши
+                onKeyPress={handleKeyPress}
                 style={{ marginRight: '20px', marginLeft: '10px', fontSize: '1.5rem' }}
             />
             <button onClick={handleAddTodo} style={{ height: '3.5rem', width: '3.5rem' }}>
