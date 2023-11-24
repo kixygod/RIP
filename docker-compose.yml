@@ -1,0 +1,28 @@
+version: "3"
+services:
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: client-builder
+    container_name: client_container
+    ports:
+      - "3000:3000" # React application port
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server-builder
+    container_name: server_container
+    ports:
+      - "3001:3001" # Node.js server port
+
+  websocket:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: websocket-builder
+    container_name: websocket_container
+    ports:
+      - "8080:8080" # websocket server port

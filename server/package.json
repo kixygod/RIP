@@ -25,5 +25,10 @@
     "sqlite3": "^5.1.6",
     "websocket": "^1.0.34",
     "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.6"
   }
 }
