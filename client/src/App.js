@@ -155,10 +155,20 @@ const App = () => {
                 // Обработка ошибки
             });
     };
+    try {
+        const token = getSavedToken();
+        const user_id = jwtDecode(token).id;
+        if (user_id !== undefined) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            useEffect(() => {
+                fetchTodos();
+            });
+        }
+    } catch (error) {
 
-    useEffect(() => {
-        fetchTodos();
-    });
+    }
+
+
 
     const addTodo = (newTodo) => {
         setTodos([...todos, newTodo]);
