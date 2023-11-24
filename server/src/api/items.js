@@ -2,139 +2,143 @@ const express = require('express');
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('todo.db');
-
-db.serialize(() => {
-    db.run("CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN)");
+// Инициализация БД и создание таблицы, если она еще не создана
+const db = new sqlite3.Database('./todo.db', (err) => {
+    if (err) {
+        console.error(err.message);
+        throw err;
+    } else {
+        console.log('Connected to the SQLite database.');
+        db.run(`CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            name TEXT,
+            completed BOOLEAN
+        )`, (err) => {
+            if (err) {
+                console.error(err.message);
+            } else {
+                console.log("Table 'tasks' created or already exists.");
+            }
+        });
+    }
 });
 
+// Получение всех заметок пользователя
 router.get('/get', (req, res) => {
-    const query = "SELECT * FROM tasks";
-    db.all(query, (err, rows) => {
+    const userId = req.query.user_id;
+    const query = "SELECT * FROM tasks WHERE user_id = ?";
+    db.all(query, userId, (err, rows) => {
         if (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to fetch tasks" });
-        } else {
-            const serializedTasks = rows.map(task => ({
-                id: task.id,
-                name: task.name,
-                completed: task.completed === 1
-            }));
-            res.json({ items: serializedTasks });
+            console.error(err.message);
+            res.status(500).json({ error: err.message });
+            return;
         }
+        const serializedTasks = rows.map((task) => ({
+            id: task.id,
+            user_id: task.user_id,
+            name: task.name,
+            completed: task.completed === 1 // SQLite не поддерживает BOOLEAN, используется INTEGER
+        }));
+        res.json(serializedTasks);
     });
 });
 
+// Получение конкретной заметки пользователя
 router.get('/get/:id', (req, res) => {
     const taskId = req.params.id;
-
-    const query = "SELECT * FROM tasks WHERE id = ?";
-    db.get(query, [taskId], (err, row) => {
+    const userId = req.query.user_id; // Предполагается, что user_id передается в запросе
+    const query = "SELECT * FROM tasks WHERE id = ? AND user_id = ?";
+    db.get(query, [taskId, userId], (err, row) => {
         if (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to fetch the task" });
+            console.error(err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (row) {
+            const serializedTask = {
+                id: row.id,
+                user_id: row.user_id,
+                name: row.name,
+                completed: row.completed === 1
+            };
+            res.json(serializedTask);
         } else {
-            if (row) {
-                const serializedTask = {
-                    id: row.id,
-                    name: row.name,
-                    completed: row.completed === 1
-                };
-                res.json(serializedTask);
-            } else {
-                res.status(404).json({ error: "Task not found" });
-            }
+            res.status(404).json({ error: "Task not found" });
         }
     });
 });
 
+// Добавление заметки
 router.post('/add', (req, res) => {
-    const { name, completed } = req.body;
-
+    const { user_id, name, completed } = req.body;
     const completedValue = completed ? 1 : 0;
-
-    const query = "INSERT INTO tasks (name, completed) VALUES (?, ?)";
-    db.run(query, [name, completedValue], function (err) {
+    const query = "INSERT INTO tasks (user_id, name, completed) VALUES (?, ?, ?)";
+    db.run(query, [user_id, name, completedValue], function (err) {
         if (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to create task" });
-        } else {
-            res.json({ id: this.lastID, name, completed });
+            console.error(err.message);
+            res.status(500).json({ error: err.message });
+            return;
         }
+        res.status(201).json({ id: this.lastID });
     });
 });
 
+// Удаление заметки
 router.delete('/del/:id', (req, res) => {
     const taskId = req.params.id;
-
-    const query = "DELETE FROM tasks WHERE id = ?";
-    db.run(query, [taskId], function (err) {
+    const userId = req.body.user_id;
+    const query = "DELETE FROM tasks WHERE id = ? AND user_id = ?";
+    db.run(query, [taskId, userId], function (err) {
         if (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to delete task" });
+            console.error(err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (this.changes === 0) {
+            res.status(404).json({ error: "Task not found or user mismatch" });
         } else {
-            if (this.changes === 0) {
-                res.status(404).json({ error: "Task not found" });
-            } else {
-                res.json({ message: "Task deleted successfully" });
-            }
+            res.status(200).json({ message: "Task deleted successfully" });
         }
     });
 });
 
+// Обновление статуса заметки на "выполнено"
 router.put('/complete/:id', (req, res) => {
     const taskId = req.params.id;
-
-    const query = "UPDATE tasks SET completed = true WHERE id = ?";
-    db.run(query, [taskId], function (err) {
+    const userId = req.body.user_id;
+    const query = "UPDATE tasks SET completed = 1 WHERE id = ? AND user_id = ?";
+    db.run(query, [taskId, userId], function (err) {
         if (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to update task" });
+            console.error(err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (this.changes === 0) {
+            res.status(404).json({ error: "Task not found or user mismatch" });
         } else {
-            if (this.changes === 0) {
-                res.status(404).json({ error: "Task not found" });
-            } else {
-                res.json({ message: "Task updated successfully" });
-            }
+            res.status(200).json({ message: "Task marked as completed successfully" });
         }
     });
 });
 
+// Обновление статуса заметки на "не выполнено"
 router.put('/move-to-active/:id', (req, res) => {
     const taskId = req.params.id;
-
-    const query = "UPDATE tasks SET completed = false WHERE id = ?";
-    db.run(query, [taskId], function (err) {
+    const userId = req.body.user_id;
+    const query = "UPDATE tasks SET completed = 0 WHERE id = ? AND user_id = ?";
+    db.run(query, [taskId, userId], function (err) {
         if (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to update task" });
+            console.error(err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (this.changes === 0) {
+            res.status(404).json({ error: "Task not found or user mismatch" });
         } else {
-            if (this.changes === 0) {
-                res.status(404).json({ error: "Task not found" });
-            } else {
-                res.json({ message: "Task updated successfully" });
-            }
+            res.status(200).json({ message: "Task moved to active successfully" });
         }
     });
 });
-
-router.put('/move-to-completed/:id', (req, res) => {
-    const taskId = req.params.id;
-
-    const query = "UPDATE tasks SET completed = true WHERE id = ?";
-    db.run(query, [taskId], function (err) {
-        if (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to update task" });
-        } else {
-            if (this.changes === 0) {
-                res.status(404).json({ error: "Task not found" });
-            } else {
-                res.json({ message: "Task updated successfully" });
-            }
-        }
-    });
-});
-
 
 module.exports = router;

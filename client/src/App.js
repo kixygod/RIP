@@ -1,11 +1,12 @@
 import "./style.css"
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Chat from './components/Chat';
+import Auth from './components/Auth'
 
 const TodoList = ({ activeTodos, completedTodos, onDelete, onToggleComplete }) => {
     return (
@@ -177,23 +178,31 @@ const App = () => {
 
     return (
         <Router>
-            <div className="main-column">
-                <div className="main-row">
-                    <div className="main-app">
-                        <h1>Список задач</h1>
-                        <AddTodo onAddTodo={addTodo} />
-                        <TodoList
-                            activeTodos={activeTodos}
-                            completedTodos={completedTodos}
-                            onDelete={deleteTodo}
-                            onToggleComplete={toggleCompleteTodo}
-                        />
+            <Routes>
+                <Route path="/" element={
+                    <Auth></Auth>
+                }></Route>
+                <Route path="/main" element={
+                    <div className="main-column">
+                        <div className="main-row">
+                            <div className="main-app">
+                                <h1>Список задач</h1>
+                                <AddTodo onAddTodo={addTodo} />
+                                <TodoList
+                                    activeTodos={activeTodos}
+                                    completedTodos={completedTodos}
+                                    onDelete={deleteTodo}
+                                    onToggleComplete={toggleCompleteTodo}
+                                />
+                            </div>
+                            <div className="chat">
+                                <Chat></Chat>
+                            </div>
+                        </div>
                     </div>
-                    <div className="chat">
-                        <Chat></Chat>
-                    </div>
-                </div>
-            </div>
+                }></Route>
+            </Routes>
+
         </Router>
     );
 };
