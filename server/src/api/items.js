@@ -87,7 +87,7 @@ router.post('/add', (req, res) => {
 // Удаление заметки
 router.delete('/del/:id', (req, res) => {
     const { user_id, name, completed } = req.body;
-    console.log('server req.body.taskId ', req.body.taskId);
+    console.log('server req.params.id ', req.params.id);
     const taskId = req.params.id;
     const userId = req.body.user_id;
     const query = "DELETE FROM tasks WHERE id = ? AND user_id = ?";
@@ -108,19 +108,26 @@ router.delete('/del/:id', (req, res) => {
 
 // Обновление статуса заметки на "выполнено"
 router.put('/complete/:id', (req, res) => {
+    const { user_id, name, completed } = req.body;
+    console.log('server req.params.id ', req.params.id);
     const taskId = req.params.id;
     const userId = req.body.user_id;
     const query = "UPDATE tasks SET completed = 1 WHERE id = ? AND user_id = ?";
-    db.run(query, [taskId, userId], function (err) {
+    db.run(query, [taskId, user_id], function (err) {
         if (err) {
+            console.log('server user_id ', userId);
             console.error(err.message);
             res.status(500).json({ error: err.message });
             return;
         }
         if (this.changes === 0) {
+            console.log('taskId ', taskId);
+            console.log('server user_id ', userId);
             res.status(404).json({ error: "Task not found or user mismatch" });
         } else {
             res.status(200).json({ message: "Task marked as completed successfully" });
+            console.log('taskId ', taskId);
+            console.log('server user_id ', userId);
         }
     });
 });

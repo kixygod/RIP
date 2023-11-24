@@ -183,6 +183,10 @@ const App = () => {
     };
 
     const toggleCompleteTodo = (id, completed) => {
+        const token = getSavedToken();
+        console.log('fetchTodos token ', token);
+        const user_id = jwtDecode(token).id;
+        console.log('fetchTodos user_id ', user_id);
         const updatedTodos = todos.map((todo) => {
             if (todo.id === id) {
                 return { ...todo, completed };
@@ -193,12 +197,12 @@ const App = () => {
         setTodos(updatedTodos);
 
         axios
-            .put(`http://localhost:3001/api/items/complete/${id}`, { completed })
+            .put(`http://localhost:3001/api/items/complete/${id}`, { completed, user_id })
             .then(() => {
                 console.log(`Todo ${id} updated`);
                 if (completed) {
                     axios
-                        .put(`http://localhost:3001/api/items/move-to-completed/${id}`)
+                        .put(`http://localhost:3001/api/items/move-to-completed/${id}`, { user_id })
                         .then(() => {
                             console.log(`Todo ${id} moved to completed`);
                         })
@@ -207,7 +211,7 @@ const App = () => {
                         });
                 } else {
                     axios
-                        .put(`http://localhost:3001/api/items/move-to-active/${id}`)
+                        .put(`http://localhost:3001/api/items/move-to-active/${id}`, { user_id })
                         .then(() => {
                             console.log(`Todo ${id} moved to active`);
                         })
