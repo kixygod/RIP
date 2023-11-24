@@ -9,14 +9,20 @@ const Auth = () => {
 
     const handleLogin = async () => {
         try {
-            // API запрос для входа
-            await axios.post('http://localhost:3001/login', { username, password });
+            const { data } = await axios.post('http://localhost:3001/login', { username, password });
+            if (!data.token) {
+                throw new Error('Token not received from server');
+            }
+            localStorage.setItem('token', data.token); // Сохраняем токен в localStorage
+            console.log('Token received:', data.token); // Добавляем логирование токена в консоль для проверки
             navigate('/main');
         } catch (error) {
-            console.error('Ошибка при входе', error);
-            alert('Ошибка входа!');
+            console.error('Error during login:', error.message);
+            // Добавим визуальное предупреждение пользователю
+            alert('Ошибка входа: ' + error.message);
         }
     };
+
 
     const handleRegister = async () => {
         try {

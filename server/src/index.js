@@ -1,11 +1,14 @@
+const api = require('./api');
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
 const app = express();
 const PORT = 3001;
+const SECRET_KEY = "todo"; // В реальном приложении используйте переменную окружения
 
 app.use(cors());
 app.use(express.json());
@@ -25,24 +28,17 @@ async function initializeDb() {
 // Инициализируем базу данных при старте сервера
 initializeDb().catch(console.error);
 
-app.get('/', (req, res) => {
-    res.json({ message: "Hello world" });
-});
-
 app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         if (!username || !password) {
             return res.status(400).send('Username and password are required');
         }
-
         const db = await dbPromise;
         const user = await db.get('SELECT * FROM users WHERE username = ?', username);
-
         if (user && await bcrypt.compare(password, user.password)) {
-            // В реальном приложении вы бы здесь создали и отправили бы токен аутентификации
-            // Например, с использованием jsonwebtoken
-            res.status(200).send('Login successful');
+            const token = jwt.sign({ id: user.id, username }, SECRET_KEY, { expiresIn: '1h' });
+            res.status(200).json({ token }); // Отправляем токен клиенту
         } else {
             res.status(401).send('Incorrect username or password');
         }
@@ -74,6 +70,8 @@ app.post('/register', async (req, res) => {
         res.status(500).send('Error registering user');
     }
 });
+
+app.use('/api', api);
 
 app.listen(PORT, () => {
     console.log(`Listening to http://localhost:${PORT}`);

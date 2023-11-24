@@ -2,6 +2,7 @@ import "./style.css"
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -59,22 +60,36 @@ const TodoList = ({ activeTodos, completedTodos, onDelete, onToggleComplete }) =
     );
 };
 
+
+
 const AddTodo = ({ onAddTodo }) => {
     const [newTodo, setNewTodo] = useState('');
 
+    const getSavedToken = () => {
+        return localStorage.getItem('token');
+    };
+
+    // Добавление заголовка авторизации с токеном к запросам axios
+    axios.defaults.headers.common['Authorization'] = `Bearer ${getSavedToken()}`;
+
     const handleAddTodo = () => {
+        const token = getSavedToken();
+        const user_id = jwtDecode(token).id;
+        console.log('user_id ', user_id); // Функция для извлечения user_id из токена
+        console.log('token ', token); // Функция для извлечения user_id из токена
         axios
             .post('http://localhost:3001/api/items/add', {
+                user_id, // Добавление user_id в запрос
                 name: newTodo,
                 completed: false,
             })
             .then((response) => {
                 const data = response.data;
-                console.log('New todo added:', data);
+                console.log('New todo added:', response);
                 setNewTodo('');
                 onAddTodo(data);
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Error adding new todo:', error);
             });
     };
@@ -105,16 +120,43 @@ const AddTodo = ({ onAddTodo }) => {
 const App = () => {
     const [todos, setTodos] = useState([]);
 
-    useEffect(() => {
-        fetchTodos();
-    }, []);
+    // useEffect(() => {
+    //     fetchTodos();
+    // }, []);
+
+    const getSavedToken = () => {
+        return localStorage.getItem('token');
+    };
+
+    // Добавление заголовка авторизации с токеном к запросам axios
+    axios.defaults.headers.common['Authorization'] = `Bearer ${getSavedToken()}`;
 
     const fetchTodos = () => {
-        axios
-            .get('http://localhost:3001/api/items/get')
-            .then((res) => setTodos(res.data.items))
+
+        const token = getSavedToken();
+        console.log('fetchTodos token ', token);
+        const user_id = jwtDecode(token).id;
+        console.log('fetchTodos user_id ', user_id);
+
+        // Устанавливаем заголовок авторизации для каждого запроса
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        axios.get('http://localhost:3001/api/items/get', {
+            params: {
+                user_id // передаем user_id как параметр запроса
+            }
+        })
+            .then((res) => {
+                if (Array.isArray(res.data)) {
+                    setTodos(res.data);
+                } else {
+                    console.error('Expected items to be an array:', res.data);
+                    setTodos([]);
+                }
+            })
             .catch((error) => {
                 console.error('Error fetching todos:', error);
+                // Обработка ошибки
             });
     };
 
