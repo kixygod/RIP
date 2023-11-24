@@ -120,9 +120,7 @@ const AddTodo = ({ onAddTodo }) => {
 const App = () => {
     const [todos, setTodos] = useState([]);
 
-    // useEffect(() => {
-    //     fetchTodos();
-    // }, []);
+
 
     const getSavedToken = () => {
         return localStorage.getItem('token');
@@ -134,9 +132,7 @@ const App = () => {
     const fetchTodos = () => {
 
         const token = getSavedToken();
-        console.log('fetchTodos token ', token);
         const user_id = jwtDecode(token).id;
-        console.log('fetchTodos user_id ', user_id);
 
         // Устанавливаем заголовок авторизации для каждого запроса
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -160,14 +156,24 @@ const App = () => {
             });
     };
 
+    useEffect(() => {
+        fetchTodos();
+    });
+
     const addTodo = (newTodo) => {
         setTodos([...todos, newTodo]);
         fetchTodos();
     };
 
     const deleteTodo = (id) => {
+        const token = getSavedToken();
+        console.log('fetchTodos token ', token);
+        const user_id = jwtDecode(token).id;
+        console.log('fetchTodos user_id ', user_id);
         axios
-            .delete(`http://localhost:3001/api/items/del/${id}`)
+            .delete(`http://localhost:3001/api/items/del/${id}`, {
+                data: { user_id: user_id }
+            })
             .then(() => {
                 setTodos(todos.filter((todo) => todo.id !== id));
             })

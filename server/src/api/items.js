@@ -86,11 +86,14 @@ router.post('/add', (req, res) => {
 
 // Удаление заметки
 router.delete('/del/:id', (req, res) => {
+    const { user_id, name, completed } = req.body;
+    console.log('server req.body.taskId ', req.body.taskId);
     const taskId = req.params.id;
     const userId = req.body.user_id;
     const query = "DELETE FROM tasks WHERE id = ? AND user_id = ?";
-    db.run(query, [taskId, userId], function (err) {
+    db.run(query, [taskId, user_id], function (err) {
         if (err) {
+            console.log('server user_id ', userId);
             console.error(err.message);
             res.status(500).json({ error: err.message });
             return;
