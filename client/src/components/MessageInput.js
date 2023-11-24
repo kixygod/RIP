@@ -13,13 +13,15 @@ const MessageInput = ({ sendMessage, setNickname }) => {
     };
 
     return (
-        <div>
+        <div className='chat-input-column'>
             <input
+                className='chat-input'
                 type="text"
                 placeholder="Enter your nickname"
                 onChange={handleNicknameChange}
             />
             <input
+                className='chat-input'
                 type="text"
                 placeholder="Type a message..."
                 value={inputValue}

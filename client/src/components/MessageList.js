@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const MessageList = ({ messages }) => {
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]); // Вызывать scrollToBottom при каждом обновлении сообщений
+
     return (
-        <ul>
+        <div className="chat-line">
             {messages.map((message, index) => (
-                <li key={index}>{`${message.nickname}: ${message.message}`}</li>
+                <div className='message' key={index}>{`${message.nickname}: ${message.message}`}</div>
             ))}
-        </ul>
+            {/* Элемент, к которому будет выполнена прокрутка */}
+            <div ref={messagesEndRef} />
+        </div>
     );
 };
-
 
 export default MessageList;

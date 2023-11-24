@@ -1,0 +1,109 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Roboto, sans-serif;
+}
+
+
+
+.main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    align-content: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    
+}
+
+.main-row>* {
+    background-color: rgb(214, 214, 214);
+    margin: 0 5rem 0 5rem;
+    padding: 2rem;
+    border: gray 1px solid;
+    border-radius: 1rem;
+}
+
+.main-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    height: 100vh;
+    
+}
+
+.main-app {
+    font-size: 1.2rem;
+    min-width: 30rem;
+    max-width: 35rem;
+    max-height: 790px;
+    height: 790px;
+}
+
+.todo-list {
+    max-height: 220px;
+    overflow: auto;
+}
+
+.chat {
+    min-width: 30rem;
+    max-width: 35rem;
+    max-height: 790px;
+    height: 790px;
+}
+
+.chat-line {
+    font-weight: 600;
+    font-size: 1.5rem;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.chat-line > .message {
+    text-wrap: wrap;
+    background-color: rgba(128, 128, 128, 0.226);
+    border-radius: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    margin: 1.5rem 1rem 1.5rem 0;
+}
+
+.chat-input-column {
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    flex-wrap: nowrap;
+    flex-direction: column;
+}
+
+.chat-input-column > button {
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.chat-input, .input-add {
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.2rem;
+    width: 20rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+}
+
+div::-webkit-scrollbar {
+    width: 15px;
+  }
+  
+  div::-webkit-scrollbar-track {
+    background-color: #e4e4e4;
+    border-radius: 100px;
+  }
+  
+  div::-webkit-scrollbar-thumb {
+    border-radius: 100px;
+    border-left: 0;
+    border-right: 0;
+    background-color: #7e7e7e;
+  }
+  
+  

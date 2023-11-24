@@ -1,3 +1,4 @@
+import "./style.css"
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -10,44 +11,49 @@ const TodoList = ({ activeTodos, completedTodos, onDelete, onToggleComplete }) =
     return (
         <div>
             <h2>Активные задачи</h2>
-            {activeTodos.map((todo) => (
-                <div key={todo.id} style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 10px 10px' }}>
-                    <FontAwesomeIcon
-                        icon={faTrash}
-                        style={{ cursor: 'pointer', border: '1px solid #ccc', padding: '4px' }}
-                        onClick={() => onDelete(todo.id)}
-                    />
-                    <input
-                        type="checkbox"
-                        style={{ transform: 'scale(1.5)', marginLeft: '20px' }}
-                        checked={todo.completed}
-                        onChange={() => onToggleComplete(todo.id, !todo.completed)}
-                    />
-                    <span style={{ marginLeft: '20px', textDecoration: todo.completed ? 'line-through' : 'none' }}>
-                        {todo.name}
-                    </span>
-                </div>
-            ))}
+            <div className="todo-list">
+                {activeTodos.map((todo) => (
+                    <div key={todo.id} style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 10px 10px' }}>
+                        <FontAwesomeIcon
+                            icon={faTrash}
+                            style={{ cursor: 'pointer', border: '1px solid #ccc', padding: '4px' }}
+                            onClick={() => onDelete(todo.id)}
+                        />
+                        <input
+                            type="checkbox"
+                            style={{ transform: 'scale(1.5)', marginLeft: '20px' }}
+                            checked={todo.completed}
+                            onChange={() => onToggleComplete(todo.id, !todo.completed)}
+                        />
+                        <span style={{ marginLeft: '20px', textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                            {todo.name}
+                        </span>
+                    </div>
+                ))}
+            </div>
+
 
             <h2>Завершенные задачи</h2>
-            {completedTodos.map((todo) => (
-                <div key={todo.id} style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 10px 10px' }}>
-                    <FontAwesomeIcon
-                        icon={faTrash}
-                        style={{ cursor: 'pointer', border: '1px solid #ccc', padding: '4px' }}
-                        onClick={() => onDelete(todo.id)}
-                    />
-                    <input
-                        type="checkbox"
-                        style={{ transform: 'scale(1.5)', marginLeft: '20px' }}
-                        checked={todo.completed}
-                        onChange={() => onToggleComplete(todo.id, !todo.completed)}
-                    />
-                    <span style={{ marginLeft: '20px', textDecoration: todo.completed ? 'line-through' : 'none' }}>
-                        {todo.name}
-                    </span>
-                </div>
-            ))}
+            <div className="todo-list">
+                {completedTodos.map((todo) => (
+                    <div key={todo.id} style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 10px 10px' }}>
+                        <FontAwesomeIcon
+                            icon={faTrash}
+                            style={{ cursor: 'pointer', border: '1px solid #ccc', padding: '4px' }}
+                            onClick={() => onDelete(todo.id)}
+                        />
+                        <input
+                            type="checkbox"
+                            style={{ transform: 'scale(1.5)', marginLeft: '20px' }}
+                            checked={todo.completed}
+                            onChange={() => onToggleComplete(todo.id, !todo.completed)}
+                        />
+                        <span style={{ marginLeft: '20px', textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                            {todo.name}
+                        </span>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
@@ -79,8 +85,8 @@ const AddTodo = ({ onAddTodo }) => {
     };
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-            <input
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'start', marginBottom: '5px' }}>
+            <input className="input-add"
                 type="text"
                 placeholder="Введите новую заметку"
                 value={newTodo}
@@ -88,7 +94,7 @@ const AddTodo = ({ onAddTodo }) => {
                 onKeyPress={handleKeyPress} // Добавляем обработчик события нажатия клавиши
                 style={{ marginRight: '20px', marginLeft: '10px', fontSize: '1.5rem' }}
             />
-            <button onClick={handleAddTodo} style={{ height: '2rem', width: '2rem' }}>
+            <button onClick={handleAddTodo} style={{ height: '3.5rem', width: '3.5rem' }}>
                 <FontAwesomeIcon icon={faPlus} />
             </button>
         </div>
@@ -171,22 +177,22 @@ const App = () => {
 
     return (
         <Router>
-            <div>
-                <Routes>
-                    <Route path="/chat" element={<Chat />} />
-                    <Route path="/" element={
-                        <div style={{ fontFamily: 'Roboto, sans-serif', fontSize: '1.5rem' }}>
-                            <Link to="/chat">Перейти к чату</Link>
-                            <h1>Список задач</h1>
-                            <AddTodo onAddTodo={addTodo} />
-                            <TodoList
-                                activeTodos={activeTodos}
-                                completedTodos={completedTodos}
-                                onDelete={deleteTodo}
-                                onToggleComplete={toggleCompleteTodo}
-                            />
-                        </div>} />
-                </Routes>
+            <div className="main-column">
+                <div className="main-row">
+                    <div className="main-app">
+                        <h1>Список задач</h1>
+                        <AddTodo onAddTodo={addTodo} />
+                        <TodoList
+                            activeTodos={activeTodos}
+                            completedTodos={completedTodos}
+                            onDelete={deleteTodo}
+                            onToggleComplete={toggleCompleteTodo}
+                        />
+                    </div>
+                    <div className="chat">
+                        <Chat></Chat>
+                    </div>
+                </div>
             </div>
         </Router>
     );
