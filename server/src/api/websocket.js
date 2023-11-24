@@ -16,28 +16,32 @@ wss.on('connection', (ws) => {
     console.log('Client connected');
 
     ws.on('message', (message) => {
-        message = JSON.parse(message)
-        console.log(`Received: ${message}`);
+        // Теперь message должен быть объектом, так что его не нужно парсить.
+        console.log('Received:', message);
 
         switch (message.event) {
             case 'message':
                 broadCastMessage(message)
-                break
+                break;
             case 'connection':
-                broadCastMessage(message)
-                break
+                // При подключении клиента отправляем приветственное сообщение
+                ws.emit('message', { event: 'message', data: 'Привет, клиент!' });
+                break;
         }
     });
 
-    // Отправка сообщения клиенту
-    ws.send('Привет, клиент!');
+
+
+    // Отправка приветственного сообщения клиенту в формате JSON
+    ws.send(JSON.stringify({ event: 'message', data: 'Привет, клиент!' }));
 });
 
 function broadCastMessage(message) {
-    wss.clients.forEach(user => {
-        user.send(JSON.stringify(message))
-    })
+    // Это отправит сообщение всем клиентам, подключенным к серверу
+    wss.emit('message', message); // Убираем JSON.stringify
 }
+
+
 
 
 testapp.get('/', (req, res) => res.send('Hello world'));
