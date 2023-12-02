@@ -4,30 +4,41 @@ const MessageInput = ({ sendMessage, setNickname }) => {
     const [inputValue, setInputValue] = useState('');
 
     const handleMessageSend = () => {
-        sendMessage(inputValue);
-        setInputValue('');
+        if (inputValue.trim() !== '') {
+            sendMessage(inputValue);
+            setInputValue('');
+        }
     };
 
     const handleNicknameChange = (event) => {
         setNickname(event.target.value);
     };
 
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            if (inputValue.trim() !== '') {
+                handleMessageSend();
+            }
+        }
+    }
+
     return (
         <div className='chat-input-column'>
             <input
                 className='chat-input'
                 type="text"
-                placeholder="Enter your nickname"
+                placeholder="Введите имя"
                 onChange={handleNicknameChange}
             />
             <input
                 className='chat-input'
                 type="text"
-                placeholder="Type a message..."
+                placeholder="Введите сообщение..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
-            <button onClick={handleMessageSend}>Send</button>
+            <button onClick={handleMessageSend}>Отправить</button>
         </div>
     );
 };

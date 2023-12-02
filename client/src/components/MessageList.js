@@ -14,7 +14,11 @@ const MessageList = ({ messages }) => {
     return (
         <div className="chat-line">
             {messages.map((message, index) => (
-                <div className='message' key={index}>{`${message.nickname}: ${message.message}`}</div>
+                // <div className='message' key={index}>{`${message.nickname}: ${message.message}`}</div>
+                <div className='message' key={index}>
+                    <span className='nickname'>{message.nickname}: </span>
+                    <span className='message-text'>{message.message}</span>
+                </div>
             ))}
             <div ref={messagesEndRef} />
         </div>

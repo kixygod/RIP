@@ -1,109 +1,210 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
+
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: "Manrope", sans-serif;
+  background-color: #3b3b3b;
+  color: rgb(231, 231, 231);
 }
 
+.auth-div > * {
+  font-size: 1rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+}
 
+.auth-login {
+  background: rgb(99, 219, 99);
+  transition: 0.2s ease;
+}
+
+.auth-login:hover {
+  background: rgb(41, 165, 41);
+  color: white;
+  cursor: pointer;
+}
+
+.auth-reg {
+  transition: 0.2s ease;
+}
+
+.auth-reg:hover {
+  background: rgb(119, 119, 119);
+  color: white;
+  cursor: pointer;
+}
+
+.auth-div > input {
+  margin: 8px 0px 8px 0px;
+  width: 11rem;
+  padding: 0.5rem;
+}
+
+.auth-div > button {
+  margin: 5px 0px 5px 0px;
+  width: 12rem;
+  padding: 0.5rem;
+  border: none;
+}
 
 .main-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    align-content: center;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    
-}
-
-.main-row>* {
-    background-color: rgb(214, 214, 214);
-    margin: 0 5rem 0 5rem;
-    padding: 2rem;
-    border: gray 1px solid;
-    border-radius: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  align-content: center;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  height: 100vh;
 }
 
 .main-column {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    flex-direction: column;
-    height: 100vh;
-    
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  height: 200vh;
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
 }
 
 .main-app {
-    font-size: 1.2rem;
-    min-width: 30rem;
-    max-width: 35rem;
-    max-height: 790px;
-    height: 790px;
+  width: 50vw;
+  padding-top: 5rem;
+}
+
+.main-app > h1 {
+  text-align: center;
+}
+
+.butt-add,
+.chat-input-column > button {
+  padding: 0.5rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  border-radius: 0;
+  color: white;
+  background: rgb(99, 219, 99);
+  border: none;
+  transition: 0.2s ease;
+}
+
+.butt-add:hover,
+.chat-input-column > button:hover {
+  background: rgb(41, 165, 41);
+  cursor: pointer;
+}
+
+.enter-task {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 5px;
 }
 
 .todo-list {
-    max-height: 220px;
-    overflow: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  width: 27rem;
+  overflow: auto;
+  font-size: 1.5rem;
+}
+
+.inner-todo-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .chat {
-    min-width: 30rem;
-    max-width: 35rem;
-    max-height: 790px;
-    height: 790px;
+  width: 50vw;
+  padding: 12rem;
 }
 
 .chat-line {
-    font-weight: 600;
-    font-size: 1.5rem;
-    max-height: 600px;
-    overflow-y: auto;
+  font-weight: 600;
+  font-size: 1.5rem;
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .chat-line > .message {
-    text-wrap: wrap;
-    background-color: rgba(128, 128, 128, 0.226);
-    border-radius: 1rem;
-    padding: 0.5rem 0.5rem 0.5rem 1rem;
-    margin: 1.5rem 1rem 1.5rem 0;
+  text-wrap: wrap;
+  background-color: rgba(128, 128, 128, 0.226);
+  border-radius: 0;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  margin: 1.5rem 1rem 1.5rem 0;
+}
+
+.nickname {
+  color: rgb(99, 219, 99);
 }
 
 .chat-input-column {
-    display: flex;
-    justify-content: end;
-    align-items: start;
-    flex-wrap: nowrap;
-    flex-direction: column;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-direction: column;
 }
 
 .chat-input-column > button {
-    font-size: 1.5rem;
-    border-radius: 0.5rem;
+  margin-top: 1rem;
+  width: 10rem;
 }
 
-.chat-input, .input-add {
-    margin: 1rem 0 0.5rem 0;
-    font-size: 1.2rem;
-    width: 20rem;
-    height: 3rem;
-    border-radius: 0.5rem;
+.chat-input,
+.input-add {
+  margin: 1rem 0 0.5rem 0;
+  font-size: 1.2rem;
+  width: 100%;
+  height: 3rem;
+  border-radius: 0;
+  border: 1px rgb(156, 156, 156) solid;
+  background-color: #252525;
+  color: rgb(231, 231, 231);
+}
+
+.chat-input,
+.input-add::placeholder {
+  color: rgb(231, 231, 231);
+}
+
+.chat-row {
+  margin-top: 21rem;
 }
 
 div::-webkit-scrollbar {
-    width: 15px;
-  }
-  
-  div::-webkit-scrollbar-track {
-    background-color: #e4e4e4;
-    border-radius: 100px;
-  }
-  
-  div::-webkit-scrollbar-thumb {
-    border-radius: 100px;
-    border-left: 0;
-    border-right: 0;
-    background-color: #7e7e7e;
-  }
-  
-  
+  width: 10px;
+}
+
+div::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+div::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  border-left: 0;
+  border-right: 0;
+  background-color: #7e7e7e;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #575757;
+  border-radius: 100px;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  border-left: 0;
+  border-right: 0;
+  background-color: #7e7e7e;
+}

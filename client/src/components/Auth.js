@@ -37,10 +37,10 @@ const Auth = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
+        <div className='auth-div' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
             <input
                 type="text"
-                placeholder="Username"
+                placeholder="Login"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
@@ -50,8 +50,8 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={handleLogin}>Войти</button>
-            <button onClick={handleRegister}>Зарегистрироваться</button>
+            <button className='auth-login' onClick={handleLogin}>Войти</button>
+            <button className='auth-reg' onClick={handleRegister}>Зарегистрироваться</button>
         </div>
     );
 };
